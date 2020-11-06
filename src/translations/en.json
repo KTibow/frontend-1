@@ -2985,7 +2985,8 @@
             "filter_attributes": "Filter attributes",
             "no_entities": "No entities",
             "more_info": "More Info",
-            "alert_entity_field": "Entity is a mandatory field"
+            "alert_entity_field": "Entity is a mandatory field",
+            "copy_id": "Copy ID to clipboard"
           },
           "templates": {
             "title": "Template",
