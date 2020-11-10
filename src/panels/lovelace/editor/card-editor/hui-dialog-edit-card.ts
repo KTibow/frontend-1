@@ -308,8 +308,8 @@ export class HuiDialogEditCard extends LitElement
       text: this.hass!.localize(
         "ui.panel.lovelace.editor.edit_card.confirm_cancel"
       ),
-      dismissText: this.hass!.localize("ui.common.stay"),
-      confirmText: this.hass!.localize("ui.common.leave"),
+      dismissText: this.hass!.localize("ui.common.no"),
+      confirmText: this.hass!.localize("ui.common.yes"),
     });
     if (confirm) {
       this._cancel();

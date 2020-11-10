@@ -646,8 +646,8 @@ export class HaSceneEditor extends SubscribeMixin(
         text: this.hass!.localize(
           "ui.panel.config.scene.editor.unsaved_confirm"
         ),
-        confirmText: this.hass!.localize("ui.common.leave"),
-        dismissText: this.hass!.localize("ui.common.stay"),
+        confirmText: this.hass!.localize("ui.common.yes"),
+        dismissText: this.hass!.localize("ui.common.no"),
         confirm: () => this._goBack(),
       });
     } else {
@@ -663,8 +663,8 @@ export class HaSceneEditor extends SubscribeMixin(
   private _deleteTapped(): void {
     showConfirmationDialog(this, {
       text: this.hass!.localize("ui.panel.config.scene.picker.delete_confirm"),
-      confirmText: this.hass!.localize("ui.common.delete"),
-      dismissText: this.hass!.localize("ui.common.cancel"),
+      confirmText: this.hass!.localize("ui.common.yes"),
+      dismissText: this.hass!.localize("ui.common.no"),
       confirm: () => this._delete(),
     });
   }

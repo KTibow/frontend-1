@@ -138,8 +138,8 @@ export class HaConfigUsers extends LitElement {
               "name",
               entry.name
             ),
-            dismissText: this.hass!.localize("ui.common.cancel"),
-            confirmText: this.hass!.localize("ui.common.delete"),
+            dismissText: this.hass!.localize("ui.common.no"),
+            confirmText: this.hass!.localize("ui.common.yes"),
           }))
         ) {
           return false;
