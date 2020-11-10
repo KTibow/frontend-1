@@ -1,69 +1,126 @@
-import "@vaadin/vaadin-date-picker/theme/material/vaadin-date-picker";
+import "@polymer/paper-input/paper-input";
+import type { PaperInputElement } from "@polymer/paper-input/paper-input";
+import {
+  css,
+  customElement,
+  html,
+  LitElement,
+  property,
+  TemplateResult,
+} from "lit-element";
 
-const VaadinDatePicker = customElements.get("vaadin-date-picker");
+@customElement("ha-date-input")
+export class HaDateInput extends LitElement {
+  @property() public year?: string;
 
-export class HaDateInput extends VaadinDatePicker {
-  constructor() {
-    super();
+  @property() public month?: string;
 
-    this.i18n.formatDate = this._formatISODate;
-    this.i18n.parseDate = this._parseISODate;
-  }
+  @property() public day?: string;
 
-  ready() {
-    super.ready();
-    const styleEl = document.createElement("style");
-    styleEl.innerHTML = `
+  @property({ type: Boolean }) public disabled = false;
+
+  static get styles() {
+    return css`
       :host {
-        width: 12ex;
-        margin-top: -6px;
-        --material-body-font-size: 16px;
-        --_material-text-field-input-line-background-color: var(--primary-text-color);
-        --_material-text-field-input-line-opacity: 1;
-        --material-primary-color: var(--primary-text-color);
+        display: block;
+        font-family: var(--paper-font-common-base_-_font-family);
+        -webkit-font-smoothing: var(
+          --paper-font-common-base_-_-webkit-font-smoothing
+        );
+      }
+
+      paper-input {
+        width: 30px;
+        text-align: center;
+        --paper-input-container-shared-input-style_-_-webkit-appearance: textfield;
+        --paper-input-container-input_-_-moz-appearance: textfield;
+        --paper-input-container-shared-input-style_-_appearance: textfield;
+        --paper-input-container-input-webkit-spinner_-_-webkit-appearance: none;
+        --paper-input-container-input-webkit-spinner_-_margin: 0;
+        --paper-input-container-input-webkit-spinner_-_display: none;
+      }
+
+      paper-input#year {
+        width: 50px;
+      }
+
+      .date-input-wrap {
+        display: flex;
+        flex-direction: row;
       }
     `;
-    this.shadowRoot.appendChild(styleEl);
-    this._inputElement.querySelector("[part='toggle-button']").style.display =
-      "none";
   }
 
-  private _formatISODate(d) {
-    return [
-      ("0000" + String(d.year)).slice(-4),
-      ("0" + String(d.month + 1)).slice(-2),
-      ("0" + String(d.day)).slice(-2),
-    ].join("-");
+  protected render(): TemplateResult {
+    return html`
+      <div class="date-input-wrap">
+        <paper-input
+          id="year"
+          type="number"
+          .value=${this.year}
+          @change=${this._formatYear}
+          maxlength="4"
+          max="9999"
+          min="0"
+          .disabled=${this.disabled}
+          no-label-float
+        >
+          <span suffix="" slot="suffix">-</span>
+        </paper-input>
+        <paper-input
+          id="month"
+          type="number"
+          .value=${this.month}
+          @change=${this._formatMonth}
+          maxlength="2"
+          max="12"
+          min="1"
+          .disabled=${this.disabled}
+          no-label-float
+        >
+          <span suffix="" slot="suffix">-</span>
+        </paper-input>
+        <paper-input
+          id="day"
+          type="number"
+          .value=${this.day}
+          @change=${this._formatDay}
+          maxlength="2"
+          max="31"
+          min="1"
+          .disabled=${this.disabled}
+          no-label-float
+        >
+        </paper-input>
+      </div>
+    `;
   }
 
-  private _parseISODate(text) {
-    const parts = text.split("-");
-    const today = new Date();
-    let date;
-    let month = today.getMonth();
-    let year = today.getFullYear();
-    if (parts.length === 3) {
-      year = parseInt(parts[0]);
-      if (parts[0].length < 3 && year >= 0) {
-        year += year < 50 ? 2000 : 1900;
-      }
-      month = parseInt(parts[1]) - 1;
-      date = parseInt(parts[2]);
-    } else if (parts.length === 2) {
-      month = parseInt(parts[0]) - 1;
-      date = parseInt(parts[1]);
-    } else if (parts.length === 1) {
-      date = parseInt(parts[0]);
-    }
+  private _formatYear() {
+    const yearElement = this.shadowRoot!.getElementById(
+      "year"
+    ) as PaperInputElement;
+    this.year = yearElement.value!;
+  }
 
-    if (date !== undefined) {
-      return { day: date, month, year };
-    }
-    return undefined;
+  private _formatMonth() {
+    const monthElement = this.shadowRoot!.getElementById(
+      "month"
+    ) as PaperInputElement;
+    this.month = ("0" + monthElement.value!).slice(-2);
+  }
+
+  private _formatDay() {
+    const dayElement = this.shadowRoot!.getElementById(
+      "day"
+    ) as PaperInputElement;
+    this.day = ("0" + dayElement.value!).slice(-2);
+  }
+
+  get value() {
+    return `${this.year}-${this.month}-${this.day}`;
   }
 }
-
-customElements.define("ha-date-input", HaDateInput as any);
 
 declare global {
   interface HTMLElementTagNameMap {
