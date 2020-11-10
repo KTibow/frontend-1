@@ -7,7 +7,6 @@ import {
   DataEntryFlowStepCreateEntry,
   DataEntryFlowStepExternal,
   DataEntryFlowStepForm,
-  DataEntryFlowStepProgress,
 } from "../../data/data_entry_flow";
 import { HomeAssistant } from "../../types";
 
@@ -68,16 +67,6 @@ export interface FlowConfig {
   renderCreateEntryDescription(
     hass: HomeAssistant,
     step: DataEntryFlowStepCreateEntry
-  ): TemplateResult | "";
-
-  renderShowFormProgressHeader(
-    hass: HomeAssistant,
-    step: DataEntryFlowStepProgress
-  ): string;
-
-  renderShowFormProgressDescription(
-    hass: HomeAssistant,
-    step: DataEntryFlowStepProgress
   ): TemplateResult | "";
 }
 

@@ -36,7 +36,6 @@ import "./step-flow-external";
 import "./step-flow-form";
 import "./step-flow-loading";
 import "./step-flow-pick-handler";
-import "./step-flow-progress";
 
 let instance = 0;
 
@@ -195,14 +194,6 @@ class DataEntryFlowDialog extends LitElement {
                         .step=${this._step}
                         .hass=${this.hass}
                       ></step-flow-abort>
-                    `
-                  : this._step.type === "progress"
-                  ? html`
-                      <step-flow-progress
-                        .flowConfig=${this._params.flowConfig}
-                        .step=${this._step}
-                        .hass=${this.hass}
-                      ></step-flow-progress>
                     `
                   : this._devices === undefined || this._areas === undefined
                   ? // When it's a create entry result, we will fetch device & area registry
