@@ -76,10 +76,12 @@ class CloudLogin extends LocalizeMixin(
           left: 8px;
         }
       </style>
-      <hass-subpage header="Home Assistant Cloud">
+      <hass-subpage header="[[localize('ui.panel.config.cloud.caption')]]">
         <div class="content">
           <ha-config-section is-wide="[[isWide]]">
-            <span slot="header">Home Assistant Cloud</span>
+            <span slot="header"
+              >[[localize('ui.panel.config.cloud.caption')]]</span
+            >
             <div slot="introduction">
               <p>
                 [[localize('ui.panel.config.cloud.login.introduction')]]

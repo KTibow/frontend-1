@@ -43,8 +43,7 @@ class HaConfigNavigation extends LitElement {
                     slot="item-icon"
                   ></ha-svg-icon>
                   <paper-item-body two-line>
-                    ${page.name ||
-                    this.hass.localize(
+                    ${this.hass.localize(
                       page.translationKey ||
                         `ui.panel.config.${page.component}.caption`
                     )}
