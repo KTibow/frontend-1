@@ -13,11 +13,10 @@ import {
 import "../../../components/ha-circular-progress";
 import { fetchRecent } from "../../../data/history";
 import { HomeAssistant } from "../../../types";
-import { findEntities } from "../common/find-entites";
 import { coordinates } from "../common/graph/coordinates";
 import { hasConfigOrEntityChanged } from "../common/has-changed";
 import "../components/hui-graph-base";
-import { LovelaceHeaderFooter, LovelaceHeaderFooterEditor } from "../types";
+import { LovelaceHeaderFooter } from "../types";
 import { GraphHeaderFooterConfig } from "./types";
 
 const MINUTE = 60000;
@@ -26,40 +25,8 @@ const DAY = 86400000;
 @customElement("hui-graph-header-footer")
 export class HuiGraphHeaderFooter extends LitElement
   implements LovelaceHeaderFooter {
-  public static async getConfigElement(): Promise<LovelaceHeaderFooterEditor> {
-    await import(
-      /* webpackChunkName: "hui-graph-footer-editor" */ "../editor/config-elements/hui-graph-footer-editor"
-    );
-    return document.createElement("hui-graph-footer-editor");
-  }
-
-  public static getStubConfig(
-    hass: HomeAssistant,
-    entities: string[],
-    entitiesFallback: string[]
-  ): GraphHeaderFooterConfig {
-    const includeDomains = ["sensor"];
-    const maxEntities = 1;
-    const entityFilter = (stateObj: HassEntity): boolean => {
-      return (
-        !isNaN(Number(stateObj.state)) &&
-        !!stateObj.attributes.unit_of_measurement
-      );
-    };
-
-    const foundEntities = findEntities(
-      hass,
-      maxEntities,
-      entities,
-      entitiesFallback,
-      includeDomains,
-      entityFilter
-    );
-
-    return {
-      type: "graph",
-      entity: foundEntities[0] || "",
-    };
+  public static getStubConfig(): Record<string, unknown> {
+    return {};
   }
 
   @property({ attribute: false }) public hass?: HomeAssistant;

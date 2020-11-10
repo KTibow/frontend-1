@@ -1,5 +1,4 @@
 import "@polymer/paper-dropdown-menu/paper-dropdown-menu";
-import "@polymer/paper-input/paper-input";
 import "@polymer/paper-item/paper-item";
 import "@polymer/paper-listbox/paper-listbox";
 import {
@@ -10,6 +9,7 @@ import {
   internalProperty,
   LitElement,
   property,
+  query,
   TemplateResult,
 } from "lit-element";
 import {
@@ -28,23 +28,33 @@ import "../../../../components/ha-card";
 import "../../../../components/ha-formfield";
 import "../../../../components/ha-icon";
 import "../../../../components/ha-switch";
-import type { HomeAssistant } from "../../../../types";
-import type { EntitiesCardConfig } from "../../cards/types";
+import { HomeAssistant } from "../../../../types";
+import { EntitiesCardConfig } from "../../cards/types";
 import "../../components/hui-theme-select-editor";
-import type { LovelaceRowConfig } from "../../entity-rows/types";
+import { LovelaceRowConfig } from "../../entity-rows/types";
 import { headerFooterConfigStructs } from "../../header-footer/types";
-import type { LovelaceCardEditor } from "../../types";
-import "../header-footer-editor/hui-header-footer-editor";
+import { LovelaceCardEditor } from "../../types";
+import "../hui-detail-editor-base";
+import { HuiElementEditor } from "../hui-element-editor";
 import "../hui-entities-card-row-editor";
-import "../hui-sub-element-editor";
 import { processEditorEntities } from "../process-editor-entities";
 import {
   EditorTarget,
-  EditSubElementEvent,
   entitiesConfigStruct,
-  SubElementEditorConfig,
+  EntitiesEditorEvent,
+  GUIModeChangedEvent,
 } from "../types";
 import { configElementStyle } from "./config-elements-style";
+
+interface EditRowEvent {
+  index: number;
+}
+
+declare global {
+  interface HASSDomEvents {
+    "edit-row": EditRowEvent;
+  }
+}
 
 const cardConfigStruct = object({
   type: string(),
@@ -66,7 +76,15 @@ export class HuiEntitiesCardEditor extends LitElement
 
   @internalProperty() private _configEntities?: LovelaceRowConfig[];
 
-  @internalProperty() private _subElementEditorConfig?: SubElementEditorConfig;
+  @internalProperty() private _editRowConfig?: LovelaceRowConfig;
+
+  @internalProperty() private _editRowIndex?: number;
+
+  @internalProperty() private _editRowGuiModeAvailable? = true;
+
+  @internalProperty() private _editRowGuiMode? = true;
+
+  @query("hui-element-editor") private _cardEditorEl?: HuiElementEditor;
 
   public setConfig(config: EntitiesCardConfig): void {
     assert(config, cardConfigStruct);
@@ -87,15 +105,28 @@ export class HuiEntitiesCardEditor extends LitElement
       return html``;
     }
 
-    if (this._subElementEditorConfig) {
+    if (this._editRowConfig) {
       return html`
-        <hui-sub-element-editor
+        <hui-detail-editor-base
           .hass=${this.hass}
-          .config=${this._subElementEditorConfig}
+          .guiModeAvailable=${this._editRowGuiModeAvailable}
+          .guiMode=${this._editRowGuiMode}
+          @toggle-gui-mode=${this._toggleMode}
           @go-back=${this._goBack}
-          @config-changed=${this._handleSubElementChanged}
         >
-        </hui-sub-element-editor>
+          <span slot="title"
+            >${this.hass.localize(
+              "ui.panel.lovelace.editor.card.entities.entity_row_editor"
+            )}</span
+          >
+          <hui-element-editor
+            .hass=${this.hass}
+            .value=${this._editRowConfig}
+            elementType="row"
+            @config-changed=${this._handleEntityRowConfigChanged}
+            @GUImode-changed=${this._handleGUIModeChanged}
+          ></hui-element-editor>
+        </hui-detail-editor-base>
       `;
     }
 
@@ -143,75 +174,43 @@ export class HuiEntitiesCardEditor extends LitElement
             ></ha-switch>
           </ha-formfield>
         </div>
-        <hui-header-footer-editor
-          .hass=${this.hass}
-          .configValue=${"header"}
-          .config=${this._config.header}
-          @value-changed=${this._valueChanged}
-          @edit-detail-element=${this._editDetailElement}
-        ></hui-header-footer-editor>
-        <hui-header-footer-editor
-          .hass=${this.hass}
-          .configValue=${"footer"}
-          .config=${this._config.footer}
-          @value-changed=${this._valueChanged}
-          @edit-detail-element=${this._editDetailElement}
-        ></hui-header-footer-editor>
       </div>
       <hui-entities-card-row-editor
         .hass=${this.hass}
         .entities=${this._configEntities}
         @entities-changed=${this._valueChanged}
-        @edit-detail-element=${this._editDetailElement}
+        @edit-row=${this._editRow}
       ></hui-entities-card-row-editor>
     `;
   }
 
-  private _valueChanged(ev: CustomEvent): void {
-    ev.stopPropagation();
+  private _valueChanged(ev: EntitiesEditorEvent): void {
     if (!this._config || !this.hass) {
       return;
     }
 
     const target = ev.target! as EditorTarget;
-    const configValue =
-      target.configValue || this._subElementEditorConfig?.type;
-    const value =
-      target.checked !== undefined
-        ? target.checked
-        : target.value || ev.detail.config || ev.detail.value;
 
     if (
-      (configValue! === "title" && target.value === this._title) ||
-      (configValue! === "theme" && target.value === this._theme)
+      (target.configValue! === "title" && target.value === this._title) ||
+      (target.configValue! === "theme" && target.value === this._theme)
     ) {
       return;
     }
 
-    if (configValue === "row" || (ev.detail && ev.detail.entities)) {
-      const newConfigEntities =
-        ev.detail.entities || this._configEntities!.concat();
-      if (configValue === "row") {
-        if (!value) {
-          newConfigEntities.splice(this._subElementEditorConfig!.index!, 1);
-          this._goBack();
-        } else {
-          newConfigEntities[this._subElementEditorConfig!.index!] = value;
-        }
+    if (ev.detail && ev.detail.entities) {
+      this._config = { ...this._config, entities: ev.detail.entities };
 
-        this._subElementEditorConfig!.elementConfig = value;
-      }
-
-      this._config = { ...this._config!, entities: newConfigEntities };
-      this._configEntities = processEditorEntities(this._config!.entities);
-    } else if (configValue) {
-      if (value === "") {
+      this._configEntities = processEditorEntities(this._config.entities);
+    } else if (target.configValue) {
+      if (target.value === "") {
         this._config = { ...this._config };
-        delete this._config[configValue!];
+        delete this._config[target.configValue!];
       } else {
         this._config = {
           ...this._config,
-          [configValue]: value,
+          [target.configValue]:
+            target.checked !== undefined ? target.checked : target.value,
         };
       }
     }
@@ -219,52 +218,49 @@ export class HuiEntitiesCardEditor extends LitElement
     fireEvent(this, "config-changed", { config: this._config });
   }
 
-  private _handleSubElementChanged(ev: CustomEvent): void {
-    ev.stopPropagation();
-    if (!this._config || !this.hass) {
-      return;
-    }
-
-    const configValue = this._subElementEditorConfig?.type;
-    const value = ev.detail.config;
-
-    if (configValue === "row") {
-      const newConfigEntities = this._configEntities!.concat();
-      if (!value) {
-        newConfigEntities.splice(this._subElementEditorConfig!.index!, 1);
-        this._goBack();
-      } else {
-        newConfigEntities[this._subElementEditorConfig!.index!] = value;
-      }
-
-      this._config = { ...this._config!, entities: newConfigEntities };
-      this._configEntities = processEditorEntities(this._config!.entities);
-    } else if (configValue) {
-      if (value === "") {
-        this._config = { ...this._config };
-        delete this._config[configValue!];
-      } else {
-        this._config = {
-          ...this._config,
-          [configValue]: value,
-        };
-      }
-    }
-
-    this._subElementEditorConfig = {
-      ...this._subElementEditorConfig!,
-      elementConfig: value,
-    };
-
-    fireEvent(this, "config-changed", { config: this._config });
-  }
-
-  private _editDetailElement(ev: HASSDomEvent<EditSubElementEvent>): void {
-    this._subElementEditorConfig = ev.detail.subElementConfig;
+  private _editRow(ev: HASSDomEvent<EditRowEvent>): void {
+    this._editRowIndex = ev.detail.index;
+    this._editRowConfig = this._configEntities![this._editRowIndex];
   }
 
   private _goBack(): void {
-    this._subElementEditorConfig = undefined;
+    this._editRowIndex = undefined;
+    this._editRowConfig = undefined;
+    this._editRowGuiModeAvailable = true;
+    this._editRowGuiMode = true;
+  }
+
+  private _toggleMode(): void {
+    this._cardEditorEl?.toggleMode();
+  }
+
+  private _handleEntityRowConfigChanged(ev: CustomEvent): void {
+    ev.stopPropagation();
+    const value = ev.detail.config as LovelaceRowConfig;
+    this._editRowGuiModeAvailable = ev.detail.guiModeAvailable;
+
+    const newConfigEntities = this._configEntities!.concat();
+
+    if (!value) {
+      newConfigEntities.splice(this._editRowIndex!, 1);
+      this._goBack();
+    } else {
+      newConfigEntities[this._editRowIndex!] = value;
+    }
+
+    this._editRowConfig = value;
+
+    this._config = { ...this._config!, entities: newConfigEntities };
+
+    this._configEntities = processEditorEntities(this._config!.entities);
+
+    fireEvent(this, "config-changed", { config: this._config! });
+  }
+
+  private _handleGUIModeChanged(ev: HASSDomEvent<GUIModeChangedEvent>): void {
+    ev.stopPropagation();
+    this._editRowGuiMode = ev.detail.guiMode;
+    this._editRowGuiModeAvailable = ev.detail.guiModeAvailable;
   }
 
   static get styles(): CSSResultArray {
@@ -276,10 +272,6 @@ export class HuiEntitiesCardEditor extends LitElement
           justify-content: space-between;
           align-items: center;
           font-size: 18px;
-        }
-
-        hui-header-footer-editor {
-          padding-top: 4px;
         }
       `,
     ];

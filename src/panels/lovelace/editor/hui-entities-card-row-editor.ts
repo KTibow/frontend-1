@@ -25,14 +25,6 @@ import { sortableStyles } from "../../../resources/ha-sortable-style";
 import { HomeAssistant } from "../../../types";
 import { EntityConfig, LovelaceRowConfig } from "../entity-rows/types";
 
-declare global {
-  interface HASSDomEvents {
-    "entities-changed": {
-      entities: LovelaceRowConfig[];
-    };
-  }
-}
-
 @customElement("hui-entities-card-row-editor")
 export class HuiEntitiesCardRowEditor extends LitElement {
   @property({ attribute: false }) protected hass?: HomeAssistant;
@@ -240,13 +232,8 @@ export class HuiEntitiesCardRowEditor extends LitElement {
   }
 
   private _editRow(ev: CustomEvent): void {
-    const index = (ev.currentTarget as any).index;
-    fireEvent(this, "edit-detail-element", {
-      subElementConfig: {
-        index,
-        type: "row",
-        elementConfig: this.entities![index],
-      },
+    fireEvent(this, "edit-row", {
+      index: (ev.currentTarget as any).index,
     });
   }
 

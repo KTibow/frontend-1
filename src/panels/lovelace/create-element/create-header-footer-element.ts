@@ -1,8 +1,5 @@
 import { LovelaceHeaderFooterConfig } from "../header-footer/types";
-import {
-  createLovelaceElement,
-  getLovelaceElementClass,
-} from "./create-element-base";
+import { createLovelaceElement } from "./create-element-base";
 
 const LAZY_LOAD_TYPES = {
   picture: () => import("../header-footer/hui-picture-header-footer"),
@@ -19,6 +16,3 @@ export const createHeaderFooterElement = (config: LovelaceHeaderFooterConfig) =>
     undefined,
     undefined
   );
-
-export const getHeaderFooterElementClass = (type: string) =>
-  getLovelaceElementClass(type, "header-footer", undefined, LAZY_LOAD_TYPES);

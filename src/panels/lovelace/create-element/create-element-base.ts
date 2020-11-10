@@ -16,7 +16,6 @@ import {
   LovelaceCard,
   LovelaceCardConstructor,
   LovelaceHeaderFooter,
-  LovelaceHeaderFooterConstructor,
   LovelaceRowConstructor,
 } from "../types";
 
@@ -46,7 +45,7 @@ interface CreateElementConfigTypes {
   "header-footer": {
     config: LovelaceHeaderFooterConfig;
     element: LovelaceHeaderFooter;
-    constructor: LovelaceHeaderFooterConstructor;
+    constructor: unknown;
   };
   view: {
     config: LovelaceViewConfig;

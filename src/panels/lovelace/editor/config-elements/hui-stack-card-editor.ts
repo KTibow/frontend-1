@@ -18,10 +18,12 @@ import { LovelaceCardConfig, LovelaceConfig } from "../../../../data/lovelace";
 import { HomeAssistant } from "../../../../types";
 import { StackCardConfig } from "../../cards/types";
 import { LovelaceCardEditor } from "../../types";
-import "../card-editor/hui-card-element-editor";
-import type { HuiCardElementEditor } from "../card-editor/hui-card-element-editor";
 import "../card-editor/hui-card-picker";
-import type { ConfigChangedEvent } from "../hui-element-editor";
+import "../hui-element-editor";
+import type {
+  ConfigChangedEvent,
+  HuiElementEditor,
+} from "../hui-element-editor";
 import { GUIModeChangedEvent } from "../types";
 
 const cardConfigStruct = object({
@@ -45,8 +47,7 @@ export class HuiStackCardEditor extends LitElement
 
   @internalProperty() private _guiModeAvailable? = true;
 
-  @query("hui-card-element-editor")
-  private _cardEditorEl?: HuiCardElementEditor;
+  @query("hui-element-editor") private _cardEditorEl?: HuiElementEditor;
 
   public setConfig(config: Readonly<StackCardConfig>): void {
     assert(config, cardConfigStruct);
@@ -139,13 +140,13 @@ export class HuiStackCardEditor extends LitElement
                   </mwc-icon-button>
                 </div>
 
-                <hui-card-element-editor
+                <hui-element-editor
                   .hass=${this.hass}
                   .value=${this._config.cards[selected]}
                   .lovelace=${this.lovelace}
                   @config-changed=${this._handleConfigChanged}
                   @GUImode-changed=${this._handleGUIModeChanged}
-                ></hui-card-element-editor>
+                ></hui-element-editor>
               `
             : html`
                 <hui-card-picker
