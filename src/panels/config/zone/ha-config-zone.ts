@@ -257,8 +257,7 @@ export class HaConfigZone extends SubscribeMixin(LitElement) {
           : ""}
         <mwc-fab
           slot="fab"
-          .label=${hass.localize("ui.panel.config.zone.add_zone")}
-          extended
+          title=${hass.localize("ui.panel.config.zone.add_zone")}
           @click=${this._createZone}
         >
           <ha-svg-icon slot="icon" .path=${mdiPlus}></ha-svg-icon>

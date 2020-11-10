@@ -153,10 +153,9 @@ class HaSceneDashboard extends LitElement {
         </mwc-icon-button>
         <a href="/config/scene/edit/new" slot="fab">
           <mwc-fab
-            .label=${this.hass.localize(
+            title=${this.hass.localize(
               "ui.panel.config.scene.picker.add_scene"
             )}
-            extended
           >
             <ha-svg-icon slot="icon" .path=${mdiPlus}></ha-svg-icon>
           </mwc-fab>

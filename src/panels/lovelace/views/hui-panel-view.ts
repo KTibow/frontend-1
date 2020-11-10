@@ -78,10 +78,9 @@ export class PanelView extends LitElement implements LovelaceViewElement {
       ${this.lovelace?.editMode && this.cards.length === 0
         ? html`
             <mwc-fab
-              .label=${this.hass!.localize(
+              title=${this.hass!.localize(
                 "ui.panel.lovelace.editor.edit_card.add"
               )}
-              extended
               @click=${this._addCard}
               class=${classMap({
                 rtl: computeRTL(this.hass!),
