@@ -74,7 +74,7 @@ class HaPanelDevState extends EventsMixin(LocalizeMixin(PolymerElement)) {
         }
         .entities ha-svg-icon {
           --mdc-icon-size: 20px;
-          padding: 4px;
+          padding: 8px;
           cursor: pointer;
         }
         .entities td:nth-child(3) {
@@ -84,6 +84,7 @@ class HaPanelDevState extends EventsMixin(LocalizeMixin(PolymerElement)) {
 
         .entities a {
           color: var(--primary-color);
+          padding-left: 8px;
         }
       </style>
 
