@@ -17,6 +17,7 @@ import {
   mdiClipboardTextMultipleOutline,
 } from "@mdi/js";
 import { computeRTL } from "../../../common/util/compute_rtl";
+import { copyToClipboard } from "../../../common/util/copy-clipboard";
 
 const ERROR_SENTINEL = {};
 /*
@@ -265,7 +266,7 @@ class HaPanelDevState extends EventsMixin(LocalizeMixin(PolymerElement)) {
 
   copyEntity(ev) {
     ev.preventDefault();
-    navigator.clipboard.writeText(ev.model.entity.entity_id);
+    copyToClipboard(ev.model.entity.entity_id);
   }
 
   entitySelected(ev) {
