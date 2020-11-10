@@ -13,10 +13,7 @@ import {
   fetchHassioAddonInfo,
   HassioAddonDetails,
 } from "../../../src/data/hassio/addon";
-import {
-  createHassioSession,
-  validateHassioSession,
-} from "../../../src/data/hassio/ingress";
+import { createHassioSession } from "../../../src/data/hassio/supervisor";
 import "../../../src/layouts/hass-loading-screen";
 import "../../../src/layouts/hass-subpage";
 import { HomeAssistant, Route } from "../../../src/types";
@@ -37,17 +34,6 @@ class HassioIngressView extends LitElement {
 
   @property({ type: Boolean })
   public narrow = false;
-
-  private _sessionKeepAlive?: number;
-
-  public disconnectedCallback() {
-    super.disconnectedCallback();
-
-    if (this._sessionKeepAlive) {
-      clearInterval(this._sessionKeepAlive);
-      this._sessionKeepAlive = undefined;
-    }
-  }
 
   protected render(): TemplateResult {
     if (!this._addon) {
@@ -97,7 +83,10 @@ class HassioIngressView extends LitElement {
   }
 
   private async _fetchData(addonSlug: string) {
-    const createSessionPromise = createHassioSession(this.hass);
+    const createSessionPromise = createHassioSession(this.hass).then(
+      () => true,
+      () => false
+    );
 
     let addon;
 
@@ -130,11 +119,7 @@ class HassioIngressView extends LitElement {
       return;
     }
 
-    let session;
-
-    try {
-      session = await createSessionPromise;
-    } catch (err) {
+    if (!(await createSessionPromise)) {
       await showAlertDialog(this, {
         text: "Unable to create an Ingress session",
         title: addon.name,
@@ -142,17 +127,6 @@ class HassioIngressView extends LitElement {
       history.back();
       return;
     }
-
-    if (this._sessionKeepAlive) {
-      clearInterval(this._sessionKeepAlive);
-    }
-    this._sessionKeepAlive = window.setInterval(async () => {
-      try {
-        await validateHassioSession(this.hass, session);
-      } catch (err) {
-        session = await createHassioSession(this.hass);
-      }
-    }, 60000);
 
     this._addon = addon;
   }
