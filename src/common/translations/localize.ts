@@ -1,4 +1,4 @@
-import { format } from "intl-messageformat-tiny";
+import { format } from "./localize-format";
 import { polyfillLocaleData } from "../../resources/locale-data-polyfill";
 import { Resources, TranslationDict } from "../../types";
 

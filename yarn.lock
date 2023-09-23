@@ -9802,7 +9802,6 @@ __metadata:
     husky: 8.0.3
     idb-keyval: 6.2.1
     instant-mocha: 1.5.2
-    intl-messageformat-tiny: ^1.0.2
     js-yaml: 4.1.0
     jszip: 3.10.1
     leaflet: 1.9.4
@@ -10284,13 +10283,6 @@ __metadata:
   version: 3.1.1
   resolution: "interpret@npm:3.1.1"
   checksum: 35cebcf48c7351130437596d9ab8c8fe131ce4038da4561e6d665f25640e0034702a031cf7e3a5cea60ac7ac548bf17465e0571ede126f3d3a6933152171ac82
-  languageName: node
-  linkType: hard
-
-"intl-messageformat-tiny@npm:^1.0.2":
-  version: 1.0.2
-  resolution: "intl-messageformat-tiny@npm:1.0.2"
-  checksum: 9ae8a264e9b672dc849385a29c14a57e0c4ddab92e7454f5f424c7dd7db5cd78e862a4ad8e9b002ed1b3c6cc8313acfdc9f6ecfceb42c6373ac71a94952c11ef
   languageName: node
   linkType: hard
 
