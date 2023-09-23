@@ -115,7 +115,7 @@
     "hls.js": "1.4.12",
     "home-assistant-js-websocket": "8.2.0",
     "idb-keyval": "6.2.1",
-    "intl-messageformat": "10.5.3",
+    "intl-messageformat-tiny": "^1.0.2",
     "js-yaml": "4.1.0",
     "leaflet": "1.9.4",
     "leaflet-draw": "1.0.4",

@@ -1,4 +1,4 @@
-import IntlMessageFormat from "intl-messageformat";
+import { format } from "intl-messageformat-tiny";
 import { polyfillLocaleData } from "../../resources/locale-data-polyfill";
 import { Resources, TranslationDict } from "../../types";
 
@@ -42,7 +42,7 @@ export type FlattenObjectKeys<
 
 export type LocalizeFunc<Keys extends string = LocalizeKeys> = (
   key: Keys,
-  ...args: any[]
+  values?: Record<string, string | number>
 ) => string;
 
 interface FormatType {
@@ -76,19 +76,14 @@ export interface FormatsType {
  */
 
 export const computeLocalize = async <Keys extends string = LocalizeKeys>(
-  cache: any,
   language: string,
-  resources: Resources,
-  formats?: FormatsType
+  resources: Resources
 ): Promise<LocalizeFunc<Keys>> => {
   await import("../../resources/intl-polyfill").then(() =>
     polyfillLocaleData(language)
   );
 
-  // Every time any of the parameters change, invalidate the strings cache.
-  cache._localizationCache = {};
-
-  return (key, ...args) => {
+  return (key, values) => {
     if (!key || !resources || !language || !resources[language]) {
       return "";
     }
@@ -101,35 +96,8 @@ export const computeLocalize = async <Keys extends string = LocalizeKeys>(
       return "";
     }
 
-    const messageKey = key + translatedValue;
-    let translatedMessage = cache._localizationCache[messageKey] as
-      | IntlMessageFormat
-      | undefined;
-
-    if (!translatedMessage) {
-      try {
-        translatedMessage = new IntlMessageFormat(
-          translatedValue,
-          language,
-          formats
-        );
-      } catch (err: any) {
-        return "Translation error: " + err.message;
-      }
-      cache._localizationCache[messageKey] = translatedMessage;
-    }
-
-    let argObject = {};
-    if (args.length === 1 && typeof args[0] === "object") {
-      argObject = args[0];
-    } else {
-      for (let i = 0; i < args.length; i += 2) {
-        argObject[args[i]] = args[i + 1];
-      }
-    }
-
     try {
-      return translatedMessage.format<string>(argObject) as string;
+      return format(translatedValue, values, language);
     } catch (err: any) {
       return "Translation " + err;
     }
