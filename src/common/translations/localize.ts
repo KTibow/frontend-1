@@ -1,6 +1,7 @@
-import { format } from "./localize-format";
+import type { TemplateResult } from "lit";
 import { polyfillLocaleData } from "../../resources/locale-data-polyfill";
 import { Resources, TranslationDict } from "../../types";
+import { formatPart, parse } from "./localize-format";
 
 // Exclude some patterns from key type checking for now
 // These are intended to be removed as errors are fixed
@@ -40,10 +41,15 @@ export type FlattenObjectKeys<
     : `${Key}`
   : never;
 
-export type LocalizeFunc<Keys extends string = LocalizeKeys> = (
-  key: Keys,
-  values?: Record<string, string | number>
-) => string;
+type HtmlTemplate = TemplateResult<1>;
+export interface LocalizeFunc<Key extends string = LocalizeKeys> {
+  (key: Key, values?: Record<string, string | number>): string;
+  (
+    key: Key,
+    values: Record<string, string | number | HtmlTemplate>,
+    listFormat: true
+  ): (string | number | HtmlTemplate)[] | string;
+}
 
 interface FormatType {
   [format: string]: any;
@@ -54,26 +60,7 @@ export interface FormatsType {
   time: FormatType;
 }
 
-/**
- * Adapted from Polymer app-localize-behavior.
- *
- * Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
- * This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
- * The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
- * The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
- * Code distributed by Google as part of the polymer project is also
- * subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
- */
-
-/**
- * Optional dictionary of user defined formats, as explained here:
- * http://formatjs.io/guides/message-syntax/#custom-formats
- *
- * For example, a valid dictionary of formats would be:
- * this.formats = {
- *    number: { USD: { style: 'currency', currency: 'USD' } }
- * }
- */
+const astCache: Record<string, ReturnType<typeof parse>> = {};
 
 export const computeLocalize = async <Keys extends string = LocalizeKeys>(
   language: string,
@@ -83,7 +70,7 @@ export const computeLocalize = async <Keys extends string = LocalizeKeys>(
     polyfillLocaleData(language)
   );
 
-  return (key, values) => {
+  return ((key, values = {}, listFormat = false): string | any[] => {
     if (!key || !resources || !language || !resources[language]) {
       return "";
     }
@@ -95,11 +82,20 @@ export const computeLocalize = async <Keys extends string = LocalizeKeys>(
     if (!translatedValue) {
       return "";
     }
+    if (!translatedValue.includes("{")) {
+      return translatedValue;
+    }
 
     try {
-      return format(translatedValue, values, language);
+      let ast = astCache[translatedValue];
+      if (!ast) {
+        ast = parse(translatedValue);
+        astCache[translatedValue] = ast;
+      }
+      const result = formatPart(ast, values, language, listFormat);
+      return listFormat && result.length > 1 ? result : result.join("");
     } catch (err: any) {
       return "Translation " + err;
     }
-  };
+  }) as LocalizeFunc<Keys>;
 };
