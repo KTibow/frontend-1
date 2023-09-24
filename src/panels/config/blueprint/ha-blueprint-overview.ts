@@ -387,8 +387,9 @@ class HaBlueprintOverview extends LitElement {
                 }
               )}
             </ul>`,
-          }
-        ),
+          },
+          true
+        ) as string,
         confirmText: this.hass!.localize(
           "ui.panel.config.blueprint.overview.blueprint_in_use_view",
           { type }

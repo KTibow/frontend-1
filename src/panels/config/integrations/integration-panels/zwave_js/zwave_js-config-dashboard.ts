@@ -501,19 +501,19 @@ class ZWaveJSConfigDashboard extends SubscribeMixin(LitElement) {
 
   private _renderErrorScreen() {
     const item = this._configEntry!;
-    let stateText: Parameters<typeof this.hass.localize> | undefined;
+    let stateText: ReturnType<typeof this.hass.localize> | undefined;
     let stateTextExtra: TemplateResult | string | undefined;
 
     if (item.disabled_by) {
-      stateText = [
+      stateText = this.hass.localize(
         "ui.panel.config.integrations.config_entry.disable.disabled_cause",
         {
           cause:
             this.hass.localize(
               `ui.panel.config.integrations.config_entry.disable.disabled_by.${item.disabled_by}`
             ) || item.disabled_by,
-        },
-      ];
+        }
+      );
       if (item.state === "failed_unload") {
         stateTextExtra = html`.
         ${this.hass.localize(
@@ -521,11 +521,13 @@ class ZWaveJSConfigDashboard extends SubscribeMixin(LitElement) {
         )}.`;
       }
     } else if (item.state === "not_loaded") {
-      stateText = ["ui.panel.config.integrations.config_entry.not_loaded"];
+      stateText = this.hass.localize(
+        "ui.panel.config.integrations.config_entry.not_loaded"
+      );
     } else if (ERROR_STATES.includes(item.state)) {
-      stateText = [
-        `ui.panel.config.integrations.config_entry.state.${item.state}`,
-      ];
+      stateText = this.hass.localize(
+        `ui.panel.config.integrations.config_entry.state.${item.state}`
+      );
       if (item.reason) {
         this.hass.loadBackendTranslation("config", item.domain);
         stateTextExtra = html` ${this.hass.localize(
@@ -543,20 +545,18 @@ class ZWaveJSConfigDashboard extends SubscribeMixin(LitElement) {
       }
     }
 
-    return html` ${stateText
+    return stateText
       ? html`
           <div class="error-message">
             <ha-svg-icon .path=${mdiAlertCircle}></ha-svg-icon>
-            <h3>
-              ${this._configEntry!.title}: ${this.hass.localize(...stateText)}
-            </h3>
+            <h3>${this._configEntry!.title}: ${stateText}</h3>
             <p>${stateTextExtra}</p>
             <mwc-button @click=${this._handleBack}>
               ${this.hass?.localize("ui.common.back")}
             </mwc-button>
           </div>
         `
-      : ""}`;
+      : nothing;
   }
 
   private _handleBack(): void {

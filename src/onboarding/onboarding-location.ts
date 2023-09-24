@@ -89,7 +89,8 @@ class OnboardingLocation extends LitElement {
             "ui.panel.page-onboarding.core-config.osm_privacy_policy"
           )}</a
         >`,
-      }
+      },
+      true
     );
 
     return html`

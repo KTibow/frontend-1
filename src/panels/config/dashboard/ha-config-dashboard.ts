@@ -57,43 +57,41 @@ const randomTip = (hass: HomeAssistant, narrow: boolean) => {
     {
       content: hass.localize(
         "ui.panel.config.tips.join",
-        "forums",
-        html`<a
-          href="https://community.home-assistant.io"
-          target="_blank"
-          rel="noreferrer"
-          >Forums</a
-        >`,
-        "twitter",
-        html`<a
-          href=${documentationUrl(hass, `/twitter`)}
-          target="_blank"
-          rel="noreferrer"
-          >Twitter</a
-        >`,
-        "discord",
-        html`<a
-          href=${documentationUrl(hass, `/join-chat`)}
-          target="_blank"
-          rel="noreferrer"
-          >Chat</a
-        >`,
-        "blog",
-        html`<a
-          href=${documentationUrl(hass, `/blog`)}
-          target="_blank"
-          rel="noreferrer"
-          >Blog</a
-        >`,
-        "newsletter",
-        html`<span class="keep-together"
-          ><a
-            href=${documentationUrl(hass, `/newsletter`)}
+        {
+          forums: html`<a
+            href="https://community.home-assistant.io"
             target="_blank"
             rel="noreferrer"
-            >Newsletter</a
-          >
-        </span>`
+            >Forums</a
+          >`,
+          twitter: html`<a
+            href=${documentationUrl(hass, `/twitter`)}
+            target="_blank"
+            rel="noreferrer"
+            >Twitter</a
+          >`,
+          discord: html`<a
+            href=${documentationUrl(hass, `/join-chat`)}
+            target="_blank"
+            rel="noreferrer"
+            >Chat</a
+          >`,
+          blog: html`<a
+            href=${documentationUrl(hass, `/blog`)}
+            target="_blank"
+            rel="noreferrer"
+            >Blog</a
+          >`,
+          newsletter: html`<span class="keep-together"
+            ><a
+              href=${documentationUrl(hass, `/newsletter`)}
+              target="_blank"
+              rel="noreferrer"
+              >Newsletter</a
+            >
+          </span>`,
+        },
+        true
       ),
       weight: 2,
       narrow: true,
@@ -108,7 +106,7 @@ const randomTip = (hass: HomeAssistant, narrow: boolean) => {
 
   tips.forEach((tip) => {
     for (let i = 0; i < tip.weight; i++) {
-      weighted.push(tip.content);
+      weighted.push(tip.content as string);
     }
   });
 

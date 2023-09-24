@@ -160,16 +160,18 @@ class ZWaveJSNodeConfig extends SubscribeMixin(LitElement) {
               <em>
                 ${this.hass.localize(
                   "ui.panel.config.zwave_js.node_config.attribution",
-                  "device_database",
-                  html`<a
-                    rel="noreferrer noopener"
-                    href=${this._nodeMetadata?.device_database_url ||
-                    "https://devices.zwave-js.io"}
-                    target="_blank"
-                    >${this.hass.localize(
-                      "ui.panel.config.zwave_js.node_config.zwave_js_device_database"
-                    )}</a
-                  >`
+                  {
+                    device_database: html`<a
+                      rel="noreferrer noopener"
+                      href=${this._nodeMetadata?.device_database_url ||
+                      "https://devices.zwave-js.io"}
+                      target="_blank"
+                      >${this.hass.localize(
+                        "ui.panel.config.zwave_js.node_config.zwave_js_device_database"
+                      )}</a
+                    >`,
+                  },
+                  true
                 )}
               </em>
             </p>

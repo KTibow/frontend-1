@@ -33,7 +33,8 @@ export class HaDisabledConfigEntryCard extends LitElement {
                 `ui.panel.config.integrations.config_entry.disable.disabled_by.${this
                   .entry.disabled_by!}`
               ) || this.entry.disabled_by,
-          }
+          },
+          true
         )}
         .domain=${this.entry.domain}
         .localizedDomainName=${this.entry.localized_domain_name}

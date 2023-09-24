@@ -800,18 +800,20 @@ export class HaMediaPlayerBrowse extends LitElement {
           <br />
           ${this.hass.localize(
             "ui.components.media-browser.setup_local_help",
-            "documentation",
-            html`<a
-              href=${documentationUrl(
-                this.hass,
-                "/more-info/local-media/setup-media"
-              )}
-              target="_blank"
-              rel="noreferrer"
-              >${this.hass.localize(
-                "ui.components.media-browser.documentation"
-              )}</a
-            >`
+            {
+              documentation: html`<a
+                href=${documentationUrl(
+                  this.hass,
+                  "/more-info/local-media/setup-media"
+                )}
+                target="_blank"
+                rel="noreferrer"
+                >${this.hass.localize(
+                  "ui.components.media-browser.documentation"
+                )}</a
+              >`,
+            },
+            true
           )}
           <br />
           ${this.hass.localize("ui.components.media-browser.local_media_files")}

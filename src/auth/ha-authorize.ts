@@ -85,20 +85,28 @@ export class HaAuthorize extends litLocalizeLiteMixin(LitElement) {
               ? this.localize("ui.panel.page-authorize.authorizing_app", {
                   app: appNames[this.clientId!],
                 })
-              : this.localize("ui.panel.page-authorize.authorizing_client", {
-                  clientId: html`<b
-                    >${this.clientId
-                      ? punycode.toASCII(this.clientId)
-                      : this.clientId}</b
-                  >`,
-                })}
+              : this.localize(
+                  "ui.panel.page-authorize.authorizing_client",
+                  {
+                    clientId: html`<b
+                      >${this.clientId
+                        ? punycode.toASCII(this.clientId)
+                        : this.clientId}</b
+                    >`,
+                  },
+                  true
+                )}
           </ha-alert>`
         : html`<p>${this.localize("ui.panel.page-authorize.authorizing")}</p>`}
       ${inactiveProviders.length > 0
         ? html`<p>
-            ${this.localize("ui.panel.page-authorize.logging_in_with", {
-              authProviderName: html`<b>${this._authProvider!.name}</b>`,
-            })}
+            ${this.localize(
+              "ui.panel.page-authorize.logging_in_with",
+              {
+                authProviderName: html`<b>${this._authProvider!.name}</b>`,
+              },
+              true
+            )}
           </p>`
         : nothing}
 

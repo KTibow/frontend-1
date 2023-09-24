@@ -918,7 +918,8 @@ export class EntityRegistrySettingsEditor extends LitElement {
                         "ui.dialogs.entity_registry.editor.change_device_area_link"
                       )}
                     </button>`,
-                  }
+                  },
+                  true
                 )}</span
               >
               <ha-switch

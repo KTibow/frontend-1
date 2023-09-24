@@ -23,7 +23,8 @@ export class CloudDiscover extends LitElement {
                 home_assistant_cloud: html`
                   <span class="no-wrap">Home Assistant Cloud</span>
                 `,
-              }
+              },
+              true
             )}
           </h1>
           <div class="features">

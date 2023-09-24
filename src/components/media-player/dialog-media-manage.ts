@@ -214,7 +214,8 @@ class DialogMediaManage extends LitElement {
                       )
                       .toLowerCase()}
                   </a>`,
-                }
+                },
+                true
               )}
             </ha-tip>`
           : nothing}

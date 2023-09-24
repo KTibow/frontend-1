@@ -58,32 +58,38 @@ export class HuiEnergyCompareCard
 
     return html`
       <ha-alert dismissable @alert-dismissed-clicked=${this._stopCompare}>
-        ${this.hass.localize("ui.panel.energy.compare.info", {
-          start: html`<b
-            >${formatDate(
-              this._start!,
-              this.hass.locale,
-              this.hass.config
-            )}${dayDifference > 0
-              ? ` -
-          ${formatDate(
-            this._end || endOfDay(new Date()),
-            this.hass.locale,
-            this.hass.config
-          )}`
-              : ""}</b
-          >`,
-          end: html`<b
-            >${formatDate(
-              this._startCompare,
-              this.hass.locale,
-              this.hass.config
-            )}${dayDifference > 0
-              ? ` -
-          ${formatDate(this._endCompare, this.hass.locale, this.hass.config)}`
-              : ""}</b
-          >`,
-        })}
+        ${this.hass.localize(
+          "ui.panel.energy.compare.info",
+          {
+            start: html`<b
+              >${formatDate(this._start!, this.hass.locale, this.hass.config) +
+              (dayDifference > 0
+                ? " - " +
+                  formatDate(
+                    this._end || endOfDay(new Date()),
+                    this.hass.locale,
+                    this.hass.config
+                  )
+                : "")}</b
+            >`,
+            end: html`<b
+              >${formatDate(
+                this._startCompare,
+                this.hass.locale,
+                this.hass.config
+              ) +
+              (dayDifference > 0
+                ? " - " +
+                  formatDate(
+                    this._endCompare,
+                    this.hass.locale,
+                    this.hass.config
+                  )
+                : "")}</b
+            >`,
+          },
+          true
+        )}
       </ha-alert>
     `;
   }

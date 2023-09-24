@@ -291,7 +291,8 @@ export class EntityVoiceSettings extends SubscribeMixin(LitElement) {
                   rel="noreferrer"
                   >${this.hass.localize("ui.dialogs.entity_registry.faq")}</a
                 >`,
-              }
+              },
+              true
             )}
           </ha-alert>`
         : html`<ha-aliases-editor

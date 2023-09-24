@@ -176,7 +176,8 @@ class DialogZWaveJSUpdateFirmwareNode extends LitElement {
                     `ui.panel.config.zwave_js.update_firmware.introduction${localizationKeySuffix}`,
                     {
                       device: html`<strong>${this._deviceName}</strong>`,
-                    }
+                    },
+                    true
                   )}
                 </p>
                 ${beginFirmwareUpdateHTML}
@@ -188,13 +189,15 @@ class DialogZWaveJSUpdateFirmwareNode extends LitElement {
                         "ui.panel.config.zwave_js.update_firmware.queued",
                         {
                           device: html`<strong>${this._deviceName}</strong>`,
-                        }
+                        },
+                        true
                       )
                     : this.hass.localize(
                         "ui.panel.config.zwave_js.update_firmware.awake",
                         {
                           device: html`<strong>${this._deviceName}</strong>`,
-                        }
+                        },
+                        true
                       )}
                 </p>
                 <p>
@@ -203,13 +206,15 @@ class DialogZWaveJSUpdateFirmwareNode extends LitElement {
                         "ui.panel.config.zwave_js.update_firmware.close_queued",
                         {
                           device: html`<strong>${this._deviceName}</strong>`,
-                        }
+                        },
+                        true
                       )
                     : this.hass.localize(
                         "ui.panel.config.zwave_js.update_firmware.close",
                         {
                           device: html`<strong>${this._deviceName}</strong>`,
-                        }
+                        },
+                        true
                       )}
                 </p>
                 ${abortFirmwareUpdateButton}
@@ -225,7 +230,8 @@ class DialogZWaveJSUpdateFirmwareNode extends LitElement {
                       (this._updateProgressMessage.sent_fragments * 100) /
                       this._updateProgressMessage.total_fragments
                     ).toFixed(2),
-                  }
+                  },
+                  true
                 )}
               </p>
               <mwc-linear-progress
@@ -238,7 +244,8 @@ class DialogZWaveJSUpdateFirmwareNode extends LitElement {
                   "ui.panel.config.zwave_js.update_firmware.close",
                   {
                     device: html`<strong>${this._deviceName}</strong>`,
-                  }
+                  },
+                  true
                 )}
               </p>
               ${abortFirmwareUpdateButton}
@@ -268,7 +275,8 @@ class DialogZWaveJSUpdateFirmwareNode extends LitElement {
                                 ]
                           }`
                         ),
-                      }
+                      },
+                      true
                     )}
                   </p>
                 </div>
@@ -333,8 +341,9 @@ class DialogZWaveJSUpdateFirmwareNode extends LitElement {
           "ui.panel.config.zwave_js.update_firmware.confirm_abort",
           {
             device: html`<strong>${this._deviceName}</strong>`,
-          }
-        ),
+          },
+          true
+        ) as string,
         dismissText: this.hass!.localize("ui.common.no"),
         confirmText: this.hass!.localize("ui.common.yes"),
       })

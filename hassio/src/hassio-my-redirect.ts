@@ -78,15 +78,17 @@ class HassioMyRedirect extends LitElement {
     if (!redirect) {
       this._error = this.supervisor.localize(
         "my.not_supported",
-        "link",
-        html`<a
-          target="_blank"
-          rel="noreferrer noopener"
-          href="https://my.home-assistant.io/faq.html#supported-pages"
-        >
-          ${this.supervisor.localize("my.faq_link")}
-        </a>`
-      );
+        {
+          link: html`<a
+            target="_blank"
+            rel="noreferrer noopener"
+            href="https://my.home-assistant.io/faq.html#supported-pages"
+          >
+            ${this.supervisor.localize("my.faq_link")}
+          </a>`,
+        },
+        true
+      ) as string;
       return;
     }
 

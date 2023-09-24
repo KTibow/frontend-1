@@ -376,67 +376,72 @@ class HaPanelMy extends LitElement {
 
   protected render() {
     if (this._error) {
-      let error: string;
-      switch (this._error) {
-        case "not_supported":
-          error =
-            this.hass.localize(
+      let error =
+        this._error === "not_supported"
+          ? this.hass.localize(
               "ui.panel.my.not_supported",
-              "link",
-              html`<a
-                target="_blank"
-                rel="noreferrer noopener"
-                href="https://my.home-assistant.io/faq.html#supported-pages"
-                >${this.hass.localize("ui.panel.my.faq_link")}</a
-              >`
-            ) || "This redirect is not supported.";
-          break;
-        case "no_component":
-          error =
-            this.hass.localize(
+              {
+                link: html`<a
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  href="https://my.home-assistant.io/faq.html#supported-pages"
+                  >${this.hass.localize("ui.panel.my.faq_link")}</a
+                >`,
+              },
+              true
+            )
+          : this._error === "no_component"
+          ? this.hass.localize(
               "ui.panel.my.component_not_loaded",
-              "integration",
-              html`<a
-                target="_blank"
-                rel="noreferrer noopener"
-                href=${documentationUrl(
-                  this.hass,
-                  `/integrations/${this._redirect!.component!}`
-                )}
-                >${domainToName(
-                  this.hass.localize,
-                  this._redirect!.component!
-                )}</a
-              >`
-            ) || "This redirect is not supported.";
-          break;
-        case "no_supervisor":
-          error = this.hass.localize(
-            "ui.panel.my.no_supervisor",
-            "docs_link",
-            html`<a
-              target="_blank"
-              rel="noreferrer noopener"
-              href=${documentationUrl(this.hass, "/installation")}
-              >${this.hass.localize("ui.panel.my.documentation")}</a
-            >`
-          );
-          break;
-        case "not_app":
-          error = this.hass.localize(
-            "ui.panel.my.not_app",
-            "link",
-            html`<a
-              target="_blank"
-              rel="noreferrer noopener"
-              href="https://companion.home-assistant.io/download"
-              >${this.hass.localize("ui.panel.my.download_app")}</a
-            >`
-          );
-          break;
-        default:
-          error = this.hass.localize("ui.panel.my.error") || "Unknown error";
-      }
+              {
+                integration: html`<a
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  href=${documentationUrl(
+                    this.hass,
+                    `/integrations/${this._redirect!.component!}`
+                  )}
+                  >${domainToName(
+                    this.hass.localize,
+                    this._redirect!.component!
+                  )}</a
+                >`,
+              },
+              true
+            )
+          : this._error === "no_supervisor"
+          ? this.hass.localize(
+              "ui.panel.my.no_supervisor",
+              {
+                docs_link: html`<a
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  href=${documentationUrl(this.hass, "/installation")}
+                  >${this.hass.localize("ui.panel.my.documentation")}</a
+                >`,
+              },
+              true
+            )
+          : this._error === "not_app"
+          ? this.hass.localize(
+              "ui.panel.my.not_app",
+              {
+                link: html`<a
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  href="https://companion.home-assistant.io/download"
+                  >${this.hass.localize("ui.panel.my.download_app")}</a
+                >`,
+              },
+              true
+            )
+          : this.hass.localize("ui.panel.my.error");
+      if (
+        (!error && this._error === "not_supported") ||
+        this._error === "no_component"
+      )
+        error = "This redirect is not supported.";
+
       return html`<hass-error-screen
         .error=${error}
         .hass=${this.hass}

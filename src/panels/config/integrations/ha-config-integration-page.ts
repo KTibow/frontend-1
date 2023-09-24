@@ -529,24 +529,26 @@ class HaConfigIntegrationPage extends SubscribeMixin(LitElement) {
   }
 
   private _renderConfigEntry(item: ConfigEntry) {
-    let stateText: Parameters<typeof this.hass.localize> | undefined;
+    let stateText: ReturnType<typeof this.hass.localize> | undefined;
     let stateTextExtra: TemplateResult | string | undefined;
     let icon: string = mdiAlertCircle;
 
     if (!item.disabled_by && item.state === "not_loaded") {
-      stateText = ["ui.panel.config.integrations.config_entry.not_loaded"];
+      stateText = this.hass.localize(
+        "ui.panel.config.integrations.config_entry.not_loaded"
+      );
     } else if (item.state === "setup_in_progress") {
       icon = mdiProgressHelper;
-      stateText = [
-        "ui.panel.config.integrations.config_entry.setup_in_progress",
-      ];
+      stateText = this.hass.localize(
+        "ui.panel.config.integrations.config_entry.setup_in_progress"
+      );
     } else if (ERROR_STATES.includes(item.state)) {
       if (item.state === "setup_retry") {
         icon = mdiReloadAlert;
       }
-      stateText = [
-        `ui.panel.config.integrations.config_entry.state.${item.state}`,
-      ];
+      stateText = this.hass.localize(
+        `ui.panel.config.integrations.config_entry.state.${item.state}`
+      );
       if (item.reason) {
         this.hass.loadBackendTranslation("config", item.domain);
         stateTextExtra = html`${this.hass.localize(
@@ -665,7 +667,7 @@ class HaConfigIntegrationPage extends SubscribeMixin(LitElement) {
         ? html`
             <div class="message" slot="meta">
               <ha-svg-icon .path=${icon}></ha-svg-icon>
-              <div>${this.hass.localize(...stateText)}</div>
+              <div>${stateText}</div>
               ${stateTextExtra
                 ? html`<simple-tooltip>${stateTextExtra}</simple-tooltip>`
                 : ""}

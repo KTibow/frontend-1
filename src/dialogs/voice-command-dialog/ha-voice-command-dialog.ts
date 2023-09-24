@@ -451,7 +451,8 @@ export class HaVoiceCommandDialog extends LitElement {
                   )}
                 </a>
               `,
-            }
+            },
+            true
           )}
         </p>
       `,

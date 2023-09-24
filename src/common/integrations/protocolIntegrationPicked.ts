@@ -61,8 +61,9 @@ export const protocolIntegrationPicked = async (
                 "ui.panel.config.integrations.config_flow.supported_hardware"
               )}</a
             >`,
-          }
-        ),
+          },
+          true
+        ) as string,
         confirmText: hass.localize(
           "ui.panel.config.integrations.config_flow.proceed"
         ),
@@ -111,8 +112,9 @@ export const protocolIntegrationPicked = async (
                 "ui.panel.config.integrations.config_flow.supported_hardware"
               )}</a
             >`,
-          }
-        ),
+          },
+          true
+        ) as string,
         confirmText: hass.localize(
           "ui.panel.config.integrations.config_flow.proceed"
         ),
@@ -155,8 +157,9 @@ export const protocolIntegrationPicked = async (
                 "ui.panel.config.integrations.config_flow.supported_hardware"
               )}</a
             >`,
-          }
-        ),
+          },
+          true
+        ) as string,
         confirmText: hass.localize(
           "ui.panel.config.integrations.config_flow.proceed"
         ),

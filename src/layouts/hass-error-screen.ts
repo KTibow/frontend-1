@@ -21,21 +21,19 @@ class HassErrorScreen extends LitElement {
   protected render(): TemplateResult {
     return html`
       ${this.toolbar
-        ? html`<div class="toolbar">
-            ${this.rootnav || history.state?.root
-              ? html`
-                  <ha-menu-button
-                    .hass=${this.hass}
-                    .narrow=${this.narrow}
-                  ></ha-menu-button>
-                `
-              : html`
-                  <ha-icon-button-arrow-prev
-                    .hass=${this.hass}
-                    @click=${this._handleBack}
-                  ></ha-icon-button-arrow-prev>
-                `}
-          </div>`
+        ? this.rootnav || history.state?.root
+          ? html`<div class="toolbar">
+              <ha-menu-button
+                .hass=${this.hass}
+                .narrow=${this.narrow}
+              ></ha-menu-button>
+            </div>`
+          : html`<div class="toolbar">
+              <ha-icon-button-arrow-prev
+                .hass=${this.hass}
+                @click=${this._handleBack}
+              ></ha-icon-button-arrow-prev>
+            </div>`
         : ""}
       <div class="content">
         <ha-alert alert-type="error">${this.error}</ha-alert>

@@ -70,7 +70,8 @@ class DialogZWaveJSHealNode extends LitElement {
                         device: html`<em
                           >${computeDeviceName(this.device, this.hass!)}</em
                         >`,
-                      }
+                      },
+                      true
                     )}
                   </p>
                 </div>
@@ -101,7 +102,8 @@ class DialogZWaveJSHealNode extends LitElement {
                         device: html`<em
                           >${computeDeviceName(this.device, this.hass!)}</em
                         >`,
-                      }
+                      },
+                      true
                     )}
                   </p>
                 </div>
@@ -126,7 +128,8 @@ class DialogZWaveJSHealNode extends LitElement {
                         device: html`<em
                           >${computeDeviceName(this.device, this.hass!)}</em
                         >`,
-                      }
+                      },
+                      true
                     )}
                   </p>
                   <p>
@@ -160,7 +163,8 @@ class DialogZWaveJSHealNode extends LitElement {
                         device: html`<em
                           >${computeDeviceName(this.device, this.hass!)}</em
                         >`,
-                      }
+                      },
+                      true
                     )}
                   </p>
                 </div>
