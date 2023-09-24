@@ -78,7 +78,7 @@ class HaRefreshTokens extends LitElement {
                               new Date(token.last_used_at),
                               this.hass.locale
                             ),
-                            location: token.last_used_ip,
+                            location: token.last_used_ip!,
                           }
                         )
                       : this.hass.localize(

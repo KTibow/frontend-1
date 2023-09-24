@@ -213,7 +213,7 @@ const tryDescribeAction = <T extends ActionType>(
       duration = hass.localize(
         `${actionTranslationBaseKey}.delay.description.duration_string`,
         {
-          string: formatDuration(config.delay),
+          string: formatDuration(config.delay)!,
         }
       );
     } else {
@@ -265,7 +265,9 @@ const tryDescribeAction = <T extends ActionType>(
           (config.metadata.title as string | undefined) ||
           config.data.media_content_id,
         hasMediaPlayer: mediaStateObj || entityId ? "true" : "",
-        mediaPlayer: mediaStateObj ? computeStateName(mediaStateObj) : entityId,
+        mediaPlayer: mediaStateObj
+          ? computeStateName(mediaStateObj)
+          : entityId!,
       }
     );
   }

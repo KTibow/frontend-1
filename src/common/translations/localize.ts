@@ -61,6 +61,21 @@ export interface FormatsType {
 }
 
 const astCache: Record<string, ReturnType<typeof parse>> = {};
+const sanityCheck = (str: string, values: object, listFormat: boolean) => {
+  /* eslint-disable no-console */
+  for (const [k, v] of Object.entries(values)) {
+    if (typeof v === "object" && !listFormat)
+      console.warn(
+        "[FIXME]",
+        v,
+        "was passed to",
+        str,
+        "but will turn into [Object object]"
+      );
+    if (typeof v === "undefined")
+      console.warn("[FIXME]", k, "was passed to", str, "as undefined");
+  }
+};
 
 export const computeLocalize = async <Keys extends string = LocalizeKeys>(
   language: string,
@@ -78,6 +93,7 @@ export const computeLocalize = async <Keys extends string = LocalizeKeys>(
     // Cache the key/value pairs for the same language, so that we don't
     // do extra work if we're just reusing strings across an application.
     const translatedValue = resources[language][key];
+    sanityCheck(translatedValue, values, listFormat);
 
     if (!translatedValue) {
       return "";
