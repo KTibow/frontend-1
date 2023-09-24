@@ -378,8 +378,7 @@ export default class HaAutomationActionRow extends LitElement {
                     ? html`
                         ${this.hass.localize(
                           "ui.panel.config.automation.editor.actions.unsupported_action",
-                          "action",
-                          type
+                          { action: type }
                         )}
                       `
                     : ""}

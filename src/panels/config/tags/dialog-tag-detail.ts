@@ -251,11 +251,9 @@ class DialogTagDetail
     );
 
     this._qrCode = html`<img
-        alt=${this.hass.localize(
-          "ui.panel.config.tag.qr_code_image",
-          "name",
-          this._name
-        )}
+        alt=${this.hass.localize("ui.panel.config.tag.qr_code_image", {
+          name: this._name,
+        })}
         src=${canvas.toDataURL()}
       ></img>`;
   }

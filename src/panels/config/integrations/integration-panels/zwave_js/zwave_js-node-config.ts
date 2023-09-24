@@ -184,8 +184,7 @@ class ZWaveJSNodeConfig extends SubscribeMixin(LitElement) {
                 <h3>
                   ${this.hass.localize(
                     "ui.panel.config.zwave_js.node_config.endpoint",
-                    "endpoint",
-                    endpoint
+                    { endpoint }
                   )}
                 </h3>
                 <ha-card>

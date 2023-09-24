@@ -207,11 +207,9 @@ export class HaConfigTags extends SubscribeMixin(LitElement) {
   private _handleAutomationClick = (ev: Event) => {
     const tag = (ev.currentTarget as any).tag;
     const data = {
-      alias: this.hass.localize(
-        "ui.panel.config.tag.automation_title",
-        "name",
-        tag.name || tag.id
-      ),
+      alias: this.hass.localize("ui.panel.config.tag.automation_title", {
+        name: tag.name || tag.id,
+      }),
       trigger: [{ platform: "tag", tag_id: tag.id } as TagTrigger],
     };
     showAutomationEditor(data);
@@ -302,11 +300,9 @@ export class HaConfigTags extends SubscribeMixin(LitElement) {
     if (
       !(await showConfirmationDialog(this, {
         title: this.hass!.localize("ui.panel.config.tag.confirm_remove_title"),
-        text: this.hass.localize(
-          "ui.panel.config.tag.confirm_remove",
-          "tag",
-          selectedTag.name || selectedTag.id
-        ),
+        text: this.hass.localize("ui.panel.config.tag.confirm_remove", {
+          tag: selectedTag.name || selectedTag.id,
+        }),
         dismissText: this.hass!.localize("ui.common.cancel"),
         confirmText: this.hass!.localize("ui.common.remove"),
       }))
