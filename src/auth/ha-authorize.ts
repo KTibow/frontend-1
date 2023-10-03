@@ -1,7 +1,7 @@
 /* eslint-disable lit/prefer-static-styles */
 import { html, LitElement, nothing, PropertyValues } from "lit";
 import { customElement, property, state } from "lit/decorators";
-import punycode from "punycode";
+import { toASCII } from "punycode";
 import { applyThemesOnElement } from "../common/dom/apply_themes_on_element";
 import { extractSearchParamsObject } from "../common/url/search-params";
 import "../components/ha-alert";
@@ -115,7 +115,7 @@ export class HaAuthorize extends litLocalizeLiteMixin(LitElement) {
               : this.localize("ui.panel.page-authorize.authorizing_client", {
                   clientId: html`<b
                     >${this.clientId
-                      ? punycode.toASCII(this.clientId)
+                      ? toASCII(this.clientId)
                       : this.clientId}</b
                   >`,
                 })}
@@ -134,6 +134,7 @@ export class HaAuthorize extends litLocalizeLiteMixin(LitElement) {
         .redirectUri=${this.redirectUri}
         .oauth2State=${this.oauth2State}
         .authProvider=${this._authProvider}
+        .ownInstance=${this._ownInstance}
         .localize=${this.localize}
       ></ha-auth-flow>
 

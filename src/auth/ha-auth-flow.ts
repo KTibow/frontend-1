@@ -1,13 +1,11 @@
 /* eslint-disable lit/prefer-static-styles */
 import "@material/mwc-button";
-import { genClientId } from "home-assistant-js-websocket";
 import { html, LitElement, nothing, PropertyValues } from "lit";
 import { customElement, property, state } from "lit/decorators";
 import { LocalizeFunc } from "../common/translations/localize";
 import "../components/ha-alert";
 import "../components/ha-checkbox";
 import { computeInitialHaFormData } from "../components/ha-form/compute-initial-ha-form-data";
-import "../components/ha-formfield";
 import "../components/ha-markdown";
 import { AuthProvider, autocompleteLoginFields } from "../data/auth";
 import {
@@ -27,6 +25,8 @@ export class HaAuthFlow extends LitElement {
   @property() public redirectUri?: string;
 
   @property() public oauth2State?: string;
+
+  @property() public ownInstance?: boolean;
 
   @property() public localize!: LocalizeFunc;
 
@@ -82,11 +82,11 @@ export class HaAuthFlow extends LitElement {
           text-align: center;
         }
         ha-auth-flow .store-token {
-          margin-top: 10px;
-          margin-left: -16px;
+          display: flex;
+          gap: 8px;
         }
       </style>
-      <form>${this._renderForm()}</form>
+      <form @submit=${this._handleSubmit}>${this._renderForm()}</form>
     `;
   }
 
@@ -104,12 +104,6 @@ export class HaAuthFlow extends LitElement {
       this._errorMessage = this._unknownError();
       return;
     }
-
-    this.addEventListener("keypress", (ev) => {
-      if (ev.key === "Enter") {
-        this._handleSubmit(ev);
-      }
-    });
   }
 
   protected updated(changedProps: PropertyValues): void {
@@ -209,18 +203,16 @@ export class HaAuthFlow extends LitElement {
             .computeError=${this._computeErrorCallback(step)}
             @value-changed=${this._stepDataChanged}
           ></ha-auth-form>
-          ${this.clientId === genClientId() &&
+          ${this.ownInstance &&
           !["select_mfa_module", "mfa"].includes(step.step_id)
             ? html`
-                <ha-formfield
-                  class="store-token"
-                  .label=${this.localize("ui.panel.page-authorize.store_token")}
-                >
+                <label>
                   <ha-checkbox
                     .checked=${this._storeToken}
                     @change=${this._storeTokenChanged}
                   ></ha-checkbox>
-                </ha-formfield>
+                  ${this.localize("ui.panel.page-authorize.store_token")}
+                </label>
               `
             : ""}
         `;
