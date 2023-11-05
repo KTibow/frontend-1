@@ -29,16 +29,14 @@ module.exports.getMinifyCSS = ({ latestBuild, isProdBuild }) => {
   return (text, type) => {
     if (!text) return text;
     const input = wrapCSS(text, type);
-    if (
-      !text.includes("babel-plugin-template-html-minifier") &&
-      !text.includes("@apply")
-    ) {
+    if (!text.includes("babel-plugin-template-html-minifier")) {
       const { code, warnings: ws } = transform({
         filename: "style.css",
         code: Buffer.from(input),
         minify: isProdBuild,
         targets: cssTargets,
-        exclude: Features.DirSelector,
+        // eslint-disable-next-line no-bitwise
+        exclude: Features.DirSelector | Features.Nesting,
       });
       const warnings = ws.filter(
         (w) => w.message !== "Unknown at rule: @apply"
