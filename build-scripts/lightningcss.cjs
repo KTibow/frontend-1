@@ -36,7 +36,7 @@ module.exports.getMinifyCSS = ({ latestBuild, isProdBuild }) => {
         minify: isProdBuild,
         targets: cssTargets,
         // eslint-disable-next-line no-bitwise
-        exclude: Features.DirSelector | Features.Nesting,
+        exclude: Features.Selectors | Features.LogicalProperties,
       });
       const warnings = ws.filter(
         (w) => w.message !== "Unknown at rule: @apply"
